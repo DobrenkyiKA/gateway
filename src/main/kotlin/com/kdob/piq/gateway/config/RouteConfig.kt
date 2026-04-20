@@ -9,27 +9,24 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class RouteConfig {
+
+    companion object {
+        private const val API_PREFIX_REWRITE = "/api(?<segment>/?.*)"
+        private const val SEGMENT_REPLACEMENT = "\${segment}"
+    }
+
     @Bean
     fun routes(builder: RouteLocatorBuilder): RouteLocator = builder.routes {
 
-        // ────────────────────────────────────────────
-        // Backend API Routes
-        // All strip the /api prefix before forwarding
-        // ────────────────────────────────────────────
-
         route("auth-server") {
             path("/api/auth/**")
-            filters {
-                rewritePath("/api(?<segment>/?.*)", "\${segment}")
-            }
+            filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
             uri("lb://auth-server")
         }
 
         route("user") {
             path("/api/users/**")
-            filters {
-                rewritePath("/api(?<segment>/?.*)", "\${segment}")
-            }
+            filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
             uri("lb://user")
         }
 
@@ -42,52 +39,20 @@ class RouteConfig {
                 "/api/srs/**",
                 "/api/progress/**"
             )
-            filters {
-                rewritePath("/api(?<segment>/?.*)", "\${segment}")
-            }
+            filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
             uri("lb://content")
         }
 
         route("ai") {
             path("/api/pipeline/**")
-            filters {
-                rewritePath("/api(?<segment>/?.*)", "\${segment}")
-            }
+            filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
             uri("lb://ai")
         }
 
         route("storage") {
-            path("/api/storage/**")
-            filters {
-                rewritePath("/api(?<segment>/?.*)", "\${segment}")
-            }
+            path("/api/versions/**")
+            filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
             uri("lb://storage")
-        }
-
-        // ────────────────────────────────────────────
-        // Frontend Routes
-        // No path rewriting — frontends handle their own routing
-        // ────────────────────────────────────────────
-
-        route("admin-ui") {
-            path("/admin/**")
-            uri("lb://admin-ui")
-        }
-
-        route("content-ui") {
-            path(
-                "/domains/**",
-                "/learn/**",
-                "/progress/**",
-                "/search/**"
-            )
-            uri("lb://content-ui")
-        }
-
-        // Home UI — catch-all, must be last
-        route("home-ui") {
-            path("/**")
-            uri("lb://home-ui")
         }
     }
 }
