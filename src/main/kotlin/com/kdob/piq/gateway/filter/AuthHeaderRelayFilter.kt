@@ -1,4 +1,4 @@
-package com.kdob.piq.gateway.config
+package com.kdob.piq.gateway.filter
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter

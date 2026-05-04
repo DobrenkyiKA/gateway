@@ -28,15 +28,11 @@ class SecurityConfig {
 
                 // ── Public API endpoints ────────────────
                 authorize("/api/auth/**", permitAll)
-//                authorize(HttpMethod.GET, "/api/domains/**", permitAll) // Doesn't work (no "authorize" method with such signature)
-//                authorize(HttpMethod.GET, "/api/topics/**", permitAll) // Doesn't work (no "authorize" method with such signature)
-//                authorize(HttpMethod.GET, "/api/questions/**", permitAll) // Doesn't work (no "authorize" method with such signature)
-//                authorize(HttpMethod.GET, "/api/search/**", permitAll) // Doesn't work (no "authorize" method with such signature)
                 authorize("/api/domains/**", permitAll)
                 authorize("/api/topics/**", permitAll)
                 authorize("/api/questions/**", permitAll)
                 authorize("/api/search/**", permitAll)
-
+               
                 // ── Static assets ───────────────────────
                 authorize("/_next/**", permitAll)
                 authorize("/favicon.ico", permitAll)

@@ -18,6 +18,15 @@ class RouteConfig {
     @Bean
     fun routes(builder: RouteLocatorBuilder): RouteLocator = builder.routes {
 
+        // ── OAuth2 (no rewrite, pass through as-is) ──
+
+        route("auth-oauth2") {
+            path("/oauth2/authorization/**", "/login/oauth2/code/**")
+            uri("lb://auth-server")
+        }
+
+        // ── Backend API ──
+
         route("auth-server") {
             path("/api/auth/**")
             filters { rewritePath(API_PREFIX_REWRITE, SEGMENT_REPLACEMENT) }
